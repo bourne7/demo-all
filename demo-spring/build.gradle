@@ -1,0 +1,126 @@
+buildscript {
+    repositories {
+        // 以下几种任意选择一个都行
+        mavenCentral()
+        maven {
+            url "https://repo.maven.apache.org/maven2/"
+        }
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+}
+
+plugins {
+    id "java"
+    id "idea"
+    id "org.springframework.boot" version '3.0.5'
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+        maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
+    }
+}
+
+version = '1.0.1'
+group = 'org.gradle.samples'
+
+compileJava.options.encoding = 'UTF-8'
+
+dependencies {
+
+    // Base dependency
+    // https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api
+    implementation group: 'javax.annotation', name: 'javax.annotation-api', version: '+'
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '+'
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web-services
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web-services', version: '+'
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools
+    implementation group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '+'
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '+'
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '+'
+
+    // https://mvnrepository.com/artifact/org.redisson/redisson
+    implementation group: 'org.redisson', name: 'redisson', version: '+'
+
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '+'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '+'
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '+'
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '+'
+
+    // Tools
+    implementation group: 'com.google.guava', name: 'guava', version: '+'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '+'
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: '+'
+    implementation group: 'org.apache.commons', name: 'commons-pool2', version: '+'
+    implementation group: 'org.apache.commons', name: 'commons-text', version: '+'
+    implementation group: 'org.apache.commons', name: 'commons-math3', version: '+'
+    implementation group: 'org.apache.commons', name: 'commons-compress', version: '+'
+    implementation group: 'commons-codec', name: 'commons-codec', version: '+'
+    implementation group: 'cn.hutool', name: 'hutool-all', version: '+'
+
+
+    // DAO
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version: '+'
+
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa:+"
+
+    // 3.0 开始替换掉了 javax
+    // https://stackoverflow.com/questions/73331089/java-lang-illegalargumentexception-not-a-managed-type-class-com-sportyshoe-ent
+    // https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api
+    implementation group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: '3.1.0'
+
+    implementation "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:+"
+
+    // https://mvnrepository.com/artifact/com.h2database/h2
+    // implementation group: 'com.h2database', name: 'h2', version: '+'
+
+    implementation "com.alibaba:druid-spring-boot-starter:+"
+    implementation "mysql:mysql-connector-java:+"
+
+    // 晕死，连这个也不兼容了
+    // https://www.baeldung.com/spring-rest-openapi-documentation
+    // http://localhost:80/swagger-ui.html
+    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '+'
+
+    // Hibernate Validator 也需要用新版的
+    // https://hibernate.org/validator/releases/
+    // https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator
+    // implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '+'
+    // 也可以用下面的替代
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '+'
+
+    // 还有下面这个的用法，https://www.baeldung.com/hibernate-validator-annotation-processor 理论上能在编译器找到错误的校验类型，但是和 gradle 的集成还没找到，先不用。
+    // https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator-annotation-processor
+    // annotationProcessor group: 'org.hibernate.validator', name: 'hibernate-validator-annotation-processor', version: '+'
+
+
+    // implementation "com.querydsl:querydsl-core:+"
+    // implementation "com.querydsl:querydsl-jpa:+"
+    // implementation "com.querydsl:querydsl-mongodb:+"
+    // implementation "com.querydsl:querydsl-apt:+"
+}
+
+// 根目录任务
+task helloWorldFromBase(group: "Custom", description: "Hello world task") {
+    println "Hello World!"
+}
+
+apply from: 'build_system_info.gradle'
+
+compileJava {
+    dependsOn modifySystemInfo
+}

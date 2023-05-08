@@ -1,0 +1,84 @@
+group 'aac'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    // maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '+'
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '+'
+
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    implementation group: 'org.projectlombok', name: 'lombok', version: '+'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '+'
+
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    implementation group: 'com.google.guava', name: 'guava', version: '+'
+
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '+'
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: '+'
+    implementation group: 'org.apache.commons', name: 'commons-pool2', version: '+'
+    implementation group: 'org.apache.commons', name: 'commons-text', version: '+'
+    implementation group: 'org.apache.commons', name: 'commons-math3', version: '+'
+    implementation group: 'org.apache.commons', name: 'commons-compress', version: '+'
+
+    implementation group: 'commons-codec', name: 'commons-codec', version: '+'
+
+    // https://mvnrepository.com/artifact/cn.hutool/hutool-all
+    implementation group: 'cn.hutool', name: 'hutool-all', version: '+'
+
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '+'
+
+    // https://mvnrepository.com/artifact/com.alibaba/transmittable-thread-local
+    implementation group: 'com.alibaba', name: 'transmittable-thread-local', version: '+'
+
+    // https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations
+    implementation group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '+'
+
+    // https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine
+    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '+'
+
+    // https://mvnrepository.com/artifact/io.projectreactor/reactor-core
+    implementation group: 'io.projectreactor', name: 'reactor-core', version: '+'
+
+    // https://mvnrepository.com/artifact/io.projectreactor/reactor-test
+    testImplementation group: 'io.projectreactor', name: 'reactor-test', version: '+'
+
+    // https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-atlas
+    implementation group: 'io.micrometer', name: 'micrometer-registry-atlas', version: '+'
+
+    // https://mvnrepository.com/artifact/com.alibaba/transmittable-thread-local
+    implementation group: 'com.alibaba', name: 'transmittable-thread-local', version: '+'
+
+    // https://mvnrepository.com/artifact/com.lmax/disruptor
+    implementation group: 'com.lmax', name: 'disruptor', version: '3.+'
+
+    // 如果是本地包，可以用这个方法引入
+    // implementation files('libs/ignore/JwtPermission-1.0.9.jar')
+
+    // https://mvnrepository.com/artifact/io.netty/netty-all
+    implementation group: 'io.netty', name: 'netty-all', version: '4.+'
+
+    // https://mvnrepository.com/artifact/com.google.inject/guice
+    implementation group: 'com.google.inject', name: 'guice', version: '+'
+
+
+}
+
+test {
+    useJUnitPlatform()
+}

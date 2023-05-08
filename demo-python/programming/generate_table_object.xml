@@ -1,0 +1,9 @@
+<table tableName="city" domainObjectName ="City">
+	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+</table>
+<table tableName="country" domainObjectName ="Country">
+	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+</table>
+<table tableName="countrylanguage" domainObjectName ="Countrylanguage">
+	<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+</table>

@@ -1,0 +1,104 @@
+server:
+  tomcat:
+    uri-encoding: UTF-8
+  port: 80
+  maxHttpRequestHeaderSize: 102400
+
+logging:
+  config: src/main/resources/logback-config.xml
+
+
+spring:
+  jackson:
+    date-format: 'yyyy-MM-dd HH:mm:ss'
+    time-zone: 'Asia/Shanghai'
+
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+  application:
+    # 从配置中心加载这个值的时候，并不会被自动注入到spring上下文里面去。所以在 swagger 里面是手动引入这个配置的。
+    name: demo-spring
+
+  data:
+    mongodb:
+      host: 172.18.81.101
+      port: 27017
+      database: public
+      username: root
+      password: root
+    redis:
+      host: 172.18.81.101
+      port: 6379
+
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    # 使用druid数据源
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://127.0.0.1:3306/demo_spring?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+    druid:
+      # 连接池初始化大小，最小，最大
+      initial-size: 1
+      minIdle: 10
+      maxActive: 100
+      # 配置获取连接等待超时的时间（毫秒）
+      maxWait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接（毫秒）
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间（毫秒）
+      minEvictableIdleTimeMillis: 30000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      # 打开PSCache，并且指定每个连接上PSCache的大小
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      filters: stat,wall,slf4j
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      # 配置DruidStatFilter
+      web-stat-filter:
+        enabled: true
+        url-pattern: "/*"
+        exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+      # 配置DruidStatViewServlet
+      stat-view-servlet:
+        enabled: true
+        url-pattern: "/druid/*"
+        # 禁用HTML页面上的“Reset All”功能
+        reset-enable: false
+        # 登录名
+        login-username: admin
+        # 登录密码
+        login-password: 12345
+
+  jpa:
+    # 数据库类型
+    database: mysql
+    # 是否打印 sql ,不打印，log4jdbc打印sql
+    show-sql: false
+    # 是否自动创建 table
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      # create – Hibernate first drops existing tables, then creates new tables
+      # update – the object model created based on the mappings (annotations or XML) is compared with the existing schema, and then Hibernate updates the schema according to the diff. It never deletes the existing tables or columns even if they are no more required by the application
+      # create-drop – similar to create, with the addition that Hibernate will drop the database after all operations are completed. Typically used for unit testing
+      # validate – Hibernate only validates whether the tables and columns exist, otherwise it throws an exception
+      # none – this value effectively turns off the DDL generation
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        # 命名策略，会将Java代码中的驼峰命名法映射到数据库中会变成下划线法
+        # 注意，这里从 2021-07-16 开始换了一个策略类了，由 SpringPhysicalNamingStrategy 换到 CamelCaseToUnderscoresNamingStrategy
+        physical_naming_strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+
+

@@ -1,0 +1,175 @@
+import java.util.regex.Pattern
+
+def static createFileIfNotExist(String filePath) {
+    File file = new File(filePath)
+
+    if (file.exists()) {
+        file.delete()
+    }
+
+    def initFileContent = '# 由gradle脚本生成。提供接口查询，以及显示在swagger UI。' + System.lineSeparator() +
+            'local:' + System.lineSeparator() +
+            '  info:' + System.lineSeparator() +
+            '    gitTag: "gitTag"' + System.lineSeparator() +
+            '    gitCommitId: "gitCommitId"' + System.lineSeparator() +
+            '    gitBranch: "gitBranch"' + System.lineSeparator() +
+            '    gradleCompileTime: "gradleCompileTime"'
+    file.createNewFile()
+    file.write(initFileContent, "UTF-8")
+
+}
+
+def static replaceText(String filePath, Pattern regex, String value) {
+    File file = new File(filePath)
+    def fileText = file.getText("UTF-8")
+    fileText = (fileText =~ regex).replaceAll(value)
+    file.write(fileText, "UTF-8")
+}
+
+
+
+def static now() {
+    def date = new Date()
+    def formattedDate = date.format('yyyy-MM-dd HH:mm:ss')
+    return formattedDate
+}
+
+def getGitHash = { ->
+    def result
+    def stdout = new ByteArrayOutputStream()
+    try {
+        exec {
+            commandLine 'git', 'rev-parse', 'HEAD'
+            // commandLine 'git', 'rev-parse', '--short', 'HEAD'
+            standardOutput = stdout
+        }
+        result = stdout.toString().trim()
+    } catch (Exception e) {
+        //e.printStackTrace()
+        result = "Cannot get git commit id."
+    }
+
+    return result
+}
+
+def getGitBranch = { ->
+    def result
+
+    try {
+        // git branch | sed -n 2p
+        // git log --oneline -n 1
+        // git branch | grep '^\*'
+        // git log -n 1 --pretty='%d %ad'
+        def command = '''
+            git log -n 1 --pretty='%d %ai'
+        '''
+        def proc = ['bash', '-c', command].execute()
+        proc.waitFor()
+        result = proc.text.replace(System.lineSeparator(), '')
+                .replace('\r\n', '')
+                .replace('\r', '')
+                .replace('\n', '')
+                .replace('* ', '')
+                .trim()
+    } catch (Exception e) {
+        result = 'error happened when getting branch.'
+    }
+
+    return result
+}
+
+task testGetGitBranch() {
+    println("testGetGitBranch begin")
+    println(getGitBranch())
+    println("testGetGitBranch end")
+}
+
+def getGitTag = { ->
+    def result
+    def stdout = new ByteArrayOutputStream()
+    try {
+        exec {
+            // --tags: Instead of using only the annotated tags, use any tag found in refs/tags
+            // --always: Show uniquely abbreviated commit object as fallback.
+            commandLine 'git', 'describe', '--tags', '--always'
+            standardOutput = stdout
+        }
+        result = stdout.toString().trim()
+    } catch (Exception e) {
+        //e.printStackTrace()
+        result = "Cannot get git tag."
+    }
+
+    return result
+}
+
+task modifySystemInfo() {
+    doLast {
+        // 修改一下配置文件，自动打上时间戳
+        println('Modifying SystemInfo...')
+        // 需要修改的 配置文件
+        def filePathTemplate = "${projectDir}/src/main/resources/application-%s.yml"
+        // 需要处理的配置文件
+        def list = ['generatedInfo']
+        // 配置文件里面的匹配
+        def regGitTag = ~'gitTag: ".*"'
+        def regGitCommitId = ~'gitCommitId: ".*"'
+        def regGitBranch = ~'gitBranch: ".*"'
+        def regGradleCompileTime = ~'gradleCompileTime: ".*"'
+        // 运行时的时间
+        def nowTime = now()
+        list.each {
+
+            // 需要替换的完整路径
+            def filePath = String.format(filePathTemplate, it)
+            println(filePath)
+
+            // 如果文件不存在，就创建一个文件。为了防止提交这个文件，已经将这个文件添加到了 gitignore 里面。本地变动就不会被无意中添加到git了。
+            createFileIfNotExist(filePath)
+
+            // 需要替换的新的时间戳
+            def gradleCompileTime = String.format('gradleCompileTime: "%s"', nowTime)
+            println(gradleCompileTime)
+            replaceText(filePath, regGradleCompileTime, gradleCompileTime)
+
+            // 需要替换 gitCommitId
+            def gitCommitId = String.format('gitCommitId: "%s"', getGitHash())
+            println(gitCommitId)
+            replaceText(filePath, regGitCommitId, gitCommitId)
+
+            // 需要替换 gitCommitId
+            def gitBranch = String.format('gitBranch: "%s"', getGitBranch())
+            println(gitBranch)
+            replaceText(filePath, regGitBranch, gitBranch)
+
+            // 需要替换 gitTag
+            def gitTag = String.format('gitTag: "%s"', getGitTag())
+            println(gitTag)
+            replaceText(filePath, regGitTag, gitTag)
+        }
+    }
+}
+
+
+//task tar(type: Tar, dependsOn: bootJar) {
+//
+//    println('Packaging Tar file...')
+//
+//    def formattedDate = new Date().format('yyyy_MM_dd__HH_mm_ss')
+//    def fileName = "$project.name" + "_" + formattedDate
+//
+//    from('build/libs') {
+//        include('*.jar')
+//    }
+//
+//    from('src/main/resources/') {
+//        include('*.yml', '*.xml')
+//    }
+//
+//    from('.') {
+//        include('docker-compose.yml')
+//    }
+//
+//    archiveName "${fileName}.tar"
+//
+//}
