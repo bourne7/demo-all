@@ -6,6 +6,7 @@ import (
 	"demo-go/code/utils"
 	"errors"
 	"fmt"
+	"github.com/yuin/gopher-lua"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"io"
 	"log"
@@ -21,7 +22,7 @@ func main() {
 
 	//testLog()
 	//funcCalcByChannel()
-	demoPointer()
+	//demoPointer()
 	//testDate()
 	//funcMonotonic()
 	//fmt.Println(time.Now().Format(constant.DATE_FORMAT))
@@ -33,6 +34,15 @@ func main() {
 	//testCompareStringAddress()
 	//testPassPointerAsKey()
 	//testError()
+
+	// create a new Lua state
+	L := lua.NewState()
+	defer L.Close()
+
+	// execute some Lua code
+	if err := L.DoString("print('Hello, world!')"); err != nil {
+		panic(err)
+	}
 
 }
 
