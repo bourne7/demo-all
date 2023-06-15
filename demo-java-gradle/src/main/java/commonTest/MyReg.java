@@ -18,7 +18,18 @@ public class MyReg {
 
 
     public static void main(String[] args) {
-        testIsMatches();
+//        testIsMatches();
+
+        testNotInStringGroup();
+    }
+
+    /**
+     * 不属于某些字符串，需要整个字符串匹配。只能用后向零宽断言。
+     */
+    private static void testNotInStringGroup() {
+        boolean matches1 = "".matches("^(?!CT_1|CT_2)");
+
+        System.out.println(matches1);
     }
 
     private static void reg1() {
@@ -94,7 +105,7 @@ public class MyReg {
     }
 
 
-    public static void testIsMatches(){
+    public static void testIsMatches() {
 
 
         String s = "import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;";
@@ -106,15 +117,15 @@ public class MyReg {
     }
 
 
-    public static void testJavaExp(){
+    public static void testJavaExp() {
 
         String str = "abcgabcgabcd";
         //贪婪型
-        System.out.println(str.replaceAll("ab.*g","***"));
+        System.out.println(str.replaceAll("ab.*g", "***"));
         //勉强型
-        System.out.println(str.replaceAll("ab.*?g","***"));
+        System.out.println(str.replaceAll("ab.*?g", "***"));
         //占有型
-        System.out.println(str.replaceAll("ab.*+g","***"));
+        System.out.println(str.replaceAll("ab.*+g", "***"));
 
         //  ***abcd
         //  ******abcd

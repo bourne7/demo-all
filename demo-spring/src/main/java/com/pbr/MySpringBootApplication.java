@@ -29,22 +29,9 @@ public class MySpringBootApplication {
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
-
-            System.out.println("Let's inspect the beans provided by Spring Boot:");
-
             String[] beanNames = ctx.getBeanDefinitionNames();
-            Arrays.sort(beanNames);
-            for (String beanName : beanNames) {
-                System.out.println(beanName);
-            }
-
-            // TODO your codes
-//            crudService.test();
-
             // If you want to exit application after your code, you may do call this method.
-//            System.exit(0);
-
-
+            // System.exit(0);
             dump();
         };
     }
