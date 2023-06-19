@@ -1,4 +1,4 @@
-package java8;
+package com.aac.test.java8;
 
 import java.io.IOException;
 import java.util.function.Function;

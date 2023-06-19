@@ -1,7 +1,4 @@
-package java8;
-
-import com.google.common.base.Stopwatch;
-import lombok.AllArgsConstructor;
+package com.aac.test.java8;
 
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
@@ -19,8 +16,15 @@ public class ForkJoinTest {
      * RecursiveAction：无返回值
      * CountedCompleter：无返回值任务，完成任务后可以触发回调
      */
-    @AllArgsConstructor
+
     private static class SumTask extends RecursiveTask<Long> {
+
+        public SumTask(long[] numbers, int from, int to) {
+            this.numbers = numbers;
+            this.from = from;
+            this.to = to;
+        }
+
         private long[] numbers;
         private int from;
         private int to;
@@ -51,7 +55,7 @@ public class ForkJoinTest {
 
     public static void main(String[] args) {
 
-        Stopwatch googleStopwatch = Stopwatch.createStarted();
+        long startTime = System.currentTimeMillis();
 
 
         // 也可以jdk8提供的通用线程池ForkJoinPool.commonPool
@@ -62,9 +66,8 @@ public class ForkJoinTest {
         Long result = forkJoinPool.invoke(new SumTask(numbers, 0, numbers.length - 1));
         forkJoinPool.shutdown();
 
-        googleStopwatch.stop();
 
-        System.out.println("Time: " + googleStopwatch);
+        System.out.println("Time: " + (System.currentTimeMillis() - startTime));
         System.out.println("最终结果：" + result);
         System.out.println("活跃线程数：" + forkJoinPool.getActiveThreadCount());
         System.out.println("窃取任务数：" + forkJoinPool.getStealCount());

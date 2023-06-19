@@ -1,4 +1,4 @@
-package java8;
+package com.aac.test.java8;
 
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
