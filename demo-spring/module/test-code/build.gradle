@@ -1,0 +1,27 @@
+dependencies {
+
+    implementation libs.disruptor
+    implementation libs.leveldb
+    implementation libs.rocksdb
+
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:+'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '+'
+
+    implementation group: 'com.alibaba', name: 'transmittable-thread-local', version: '+'
+
+    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '+'
+
+    implementation group: 'io.projectreactor', name: 'reactor-core', version: '+'
+    testImplementation group: 'io.projectreactor', name: 'reactor-test', version: '+'
+
+    implementation group: 'io.micrometer', name: 'micrometer-registry-atlas', version: '+'
+
+    implementation group: 'io.netty', name: 'netty-all', version: '4.+'
+
+    implementation group: 'com.google.inject', name: 'guice', version: '+'
+
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '+'
+}

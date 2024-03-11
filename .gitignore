@@ -1,0 +1,60 @@
+# If you prefer the allow list template instead of the deny list, see community template:
+# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
+#
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# Go workspace file
+go.work
+
+# 忽略所有的包含 .gradle 的文件或者目录
+.gradle
+.idea
+
+# 忽略根目录下面的 build 目录。
+**/build
+**/classes
+**/logs
+**/log
+**/out
+**/bin
+
+### IntelliJ IDEA ###
+*.iws
+*.ipr
+
+### Visual Studio Code ###
+/.vscode
+
+# 其他要忽略的文件
+.DS_Store
+ignore
+/ignore
+
+# 其他要忽略的目录
+/generated/
+/build/
+
+*/generated/
+*/build/
+
+**/generated/
+**/build/
+
+*generated*
+
+LOG_PATH_IS_UNDEFINED
+

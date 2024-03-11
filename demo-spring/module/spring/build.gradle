@@ -1,0 +1,60 @@
+plugins {
+    // https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/htmlsingle/
+    // https://plugins.gradle.org/plugin/org.springframework.boot
+    id "org.springframework.boot" version '3.1.5'
+}
+
+dependencies {
+
+    testImplementation libs.spring.boot.starter.test
+
+    implementation libs.javax.annotation.api
+
+    implementation libs.spring.boot.starter.web.services
+    implementation libs.spring.boot.starter.actuator
+    implementation libs.spring.boot.starter.data.jpa
+    implementation libs.spring.boot.starter.validation
+
+    // implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis'
+    // implementation group: 'org.redisson', name: 'redisson'
+
+
+    // 3.0 开始替换掉了 javax
+    // https://stackoverflow.com/questions/73331089/java-lang-illegalargumentexception-not-a-managed-type-class-com-sportyshoe-ent
+    // implementation libs.jakarta.persistence.api
+    // implementation libs.hibernate.jpa.api
+
+    // https://mvnrepository.com/artifact/com.h2database/h2
+    // implementation group: 'com.h2database', name: 'h2'
+
+    implementation libs.druid.spring.boot.starter
+    implementation libs.mysql.connector.java
+
+    // 晕死，连这个也不兼容了
+    // https://www.baeldung.com/spring-rest-openapi-documentation
+    // http://localhost:80/swagger-ui.html
+    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
+    implementation libs.springdoc.openapi.starter.webmvc.ui
+
+    // Hibernate Validator 也需要用新版的
+    // https://hibernate.org/validator/releases/
+    // https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator
+    // implementation group: 'org.hibernate.validator', name: 'hibernate-validator'
+    // 也可以用下面的替代
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
+    implementation libs.spring.boot.starter.validation
+
+    // 还有下面这个的用法，https://www.baeldung.com/hibernate-validator-annotation-processor 理论上能在编译器找到错误的校验类型，但是和 gradle 的集成还没找到，先不用。
+    // https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator-annotation-processor
+    // annotationProcessor group: 'org.hibernate.validator', name: 'hibernate-validator-annotation-processor'
+
+    // implementation "com.querydsl:querydsl-core:+"
+    // implementation "com.querydsl:querydsl-jpa:+"
+    // implementation "com.querydsl:querydsl-mongodb:+"
+    // implementation "com.querydsl:querydsl-apt:+"
+
+    // 如果是本地包，可以用这个方法引入
+    // implementation files('libs/ignore/JwtPermission-1.0.9.jar')
+
+    implementation libs.groovy
+}
