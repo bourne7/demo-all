@@ -10,10 +10,11 @@ buildscript {
     }
 }
 
-apply {
-    plugin 'java'
-    plugin 'idea'
-    plugin 'application'
+plugins {
+    id 'java'
+    id 'idea'
+    id 'application'
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 idea {
@@ -28,8 +29,8 @@ java {
     targetCompatibility = JavaVersion.VERSION_21
 }
 
-version = '1.0.1'
-group = 'org.gradle.samples'
+version = '1.0.0'
+group = 'com.example'
 
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
@@ -60,8 +61,43 @@ dependencies {
 
 }
 
-mainClassName = "com.example.AkkaQuickstart"
-
 run {
     standardInput = System.in
 }
+
+shadowJar {
+    append 'reference.conf'
+    append 'version.conf'
+    archiveClassifier.set('main')
+    mainClassName = 'com.example.AkkaQuickstart'
+    with jar
+}
+
+//// Configure the Shadow JAR task
+//shadowJar {
+//    archiveBaseName = 'your-application'
+////    archiveBaseName.set('your-application')
+//    archiveVersion.set('1.0.0')
+//    archiveClassifier.set('aac')
+//    mainClassName = 'com.example.AkkaQuickstart'
+//    manifest {
+//        attributes 'Main-Class': 'com.example.AkkaQuickstart'
+//    }
+//}
+
+//jar {
+//    manifest {
+//        attributes(
+//                'Implementation-Title': 'Gradle Quickstart',
+//                'Implementation-Version': version,
+//                'Main-Class': 'com.example.AkkaQuickstart'
+//        )
+//    }
+//    from {
+//        configurations.runtimeClasspath.collect {
+//            it.isDirectory() ? it : zipTree(it)
+//        }
+//    }
+//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//}
+

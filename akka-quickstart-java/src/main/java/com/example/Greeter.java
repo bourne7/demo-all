@@ -13,12 +13,6 @@ public class Greeter extends AbstractBehavior<Greeter.Greet> {
         super(context);
     }
 
-    public record Greet(String whom, ActorRef<Greeted> replyTo) {
-    }
-
-    public record Greeted(String whom, ActorRef<Greet> from) {
-    }
-
     public static Behavior<Greet> create() {
         return Behaviors.setup(Greeter::new);
     }
@@ -38,6 +32,12 @@ public class Greeter extends AbstractBehavior<Greeter.Greet> {
         command.replyTo().tell(new Greeted(command.whom(), getContext().getSelf()));
 
         return this;
+    }
+
+    public record Greet(String whom, ActorRef<Greeted> replyTo) {
+    }
+
+    public record Greeted(String whom, ActorRef<Greet> from) {
     }
 }
 
