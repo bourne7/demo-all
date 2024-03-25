@@ -36,19 +36,6 @@ public class PluginService {
     @PostConstruct
     public void init() {
         PluginDTO pluginDTO = new PluginDTO();
-        pluginDTO.pluginId = "MyDynamicBean";
-        pluginDTO.fullClassName = "com.pbr.plugin.MyDynamicBean";
-        pluginDTO.sourceCode = """
-                package com.pbr.plugin;
-                public class MyDynamicBean { 
-                    public String sayHello() {
-                        return "Hello from the dynamic bean!";
-                    }
-                }
-                """;
-        PLUGIN_MAP.put(pluginDTO.pluginId, pluginDTO);
-
-        pluginDTO = new PluginDTO();
         pluginDTO.pluginId = "MyExtensionPointAImpl";
         pluginDTO.fullClassName = "com.pbr.ignore.MyExtensionPointAImpl";
         pluginDTO.sourceCode = """
@@ -69,7 +56,6 @@ public class PluginService {
                         }
                   
                   }
-                  
                 """;
         PLUGIN_MAP.put(ExtensionPointA.class.getSimpleName(), pluginDTO);
     }
@@ -82,11 +68,11 @@ public class PluginService {
 
         String classpath = System.getProperty("java.class.path");
         String[] classpathEntries = classpath.split(File.pathSeparator);
-        File[] jars = Arrays.stream(classpathEntries)
-                .map(File::new)
-                .filter(File::isFile)
-                .toList()
-                .toArray(new File[0]);
+//        File[] jars = Arrays.stream(classpathEntries)
+//                .map(File::new)
+//                .filter(File::isFile)
+//                .toList()
+//                .toArray(new File[0]);
 
         JavaSourceCompiler javaSourceCompiler = JavaSourceCompiler
                 .create(applicationContext.getClassLoader())

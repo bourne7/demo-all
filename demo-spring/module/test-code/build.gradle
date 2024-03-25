@@ -24,4 +24,8 @@ dependencies {
     implementation group: 'com.google.inject', name: 'guice', version: '+'
 
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '+'
+
+    // https://mvnrepository.com/artifact/net.jodah/expiringmap
+    implementation group: 'net.jodah', name: 'expiringmap', version: '+'
+
 }

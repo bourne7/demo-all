@@ -7,6 +7,8 @@ public class PluginDTO {
 
     public String pluginId;
 
+    public String pluginInterface;
+
     public String fullClassName;
 
     public String sourceCode;

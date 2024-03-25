@@ -29,16 +29,17 @@ public class SqlDBConfig {
     @Autowired
     private JpaProperties jpaProperties;
 
-    @Bean
-    @Primary
-    public DataSource dataSource() {
-        return DruidDataSourceBuilder.create().build();
-    }
+//    @Bean
+//    @Primary
+//    public DataSource dataSource() {
+//        return DruidDataSourceBuilder.create().build();
+//    }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder) {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder,
+                                                                       DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = builder
-                .dataSource(dataSource())
+                .dataSource(dataSource)
                 .properties(jpaProperties.getProperties())
                 .packages("com.pbr.dao.rdb.entity")
                 .build();
