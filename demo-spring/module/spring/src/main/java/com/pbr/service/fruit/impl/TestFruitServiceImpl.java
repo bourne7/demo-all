@@ -80,15 +80,20 @@ public class TestFruitServiceImpl implements TestFruitService {
         if (!TransactionSynchronizationManager.isActualTransactionActive()) {
             throw new RuntimeException("No transaction!");
         }
+        taFruitRepository.deleteAll();
+
+        // 这个可以不用在事务里面
+        taFruitRepository.save(taFruit);
+
+        // 这个一定要在事务里面
+        entityManager.merge(taFruit);
 
         TaFruit byName = taFruitRepository.findByCode(taFruit.getCode());
 
+
         if (byName != null) {
-
+            log.info("get after save {}", JsonUtils.obj2String(byName));
         }
-
-
-        taFruitRepository.save(taFruit);
 
         // 如果没有这一句的话, 则不会即时刷新到 数据库, 那么报错只会发生在事务提交的一瞬间. 如果加了这一句, 那么就会在过程中报错.
         // entityManager.flush();
@@ -96,6 +101,6 @@ public class TestFruitServiceImpl implements TestFruitService {
         log.info("taFruit {}", JsonUtils.obj2String(taFruit));
 
         // 注意这里不会让 taFruit 被 entityManager 管理
-        taFruit.setCode("after saving");
+        taFruit.setCode(taFruit.getCode() + "_" + atomInteger.incrementAndGet());
     }
 }

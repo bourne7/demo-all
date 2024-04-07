@@ -6,6 +6,7 @@ import com.pbr.service.fruit.inter.TestService;
 import jakarta.persistence.EntityManager;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +43,13 @@ public class TestFruitController {
     public Object createOrUpdate(@RequestBody TaFruit taFruit) {
         testFruitService.createOrUpdate(taFruit);
         return taFruit;
+    }
+
+    @Scheduled(fixedDelay = 1000 * 1000)
+    void test() {
+        TaFruit taFruit = new TaFruit();
+        taFruit.setCode("apple_" + System.currentTimeMillis());
+        testFruitService.createOrUpdate(taFruit);
     }
 
 

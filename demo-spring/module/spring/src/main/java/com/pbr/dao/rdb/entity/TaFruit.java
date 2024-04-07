@@ -30,5 +30,8 @@ public class TaFruit extends EntityUser {
     private String code;
 
     private Integer size;
-    private Integer size2;
+
+    @Version
+    private long version;
+
 }
