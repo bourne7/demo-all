@@ -5,13 +5,20 @@ import typing
 from PIL import Image
 
 
-def process(path_src: str, path_collect: str, enable_replace: bool, process_method: typing.Callable) -> None:
+def process(
+    path_src: str,
+    path_collect: str,
+    enable_replace: bool,
+    process_method: typing.Callable,
+) -> None:
+
+    count = 0
 
     if enable_replace:
         path_dst = path_src
     else:
         if not path_collect:
-            path_collect = '%s%s' % (path_src, '_resize')
+            path_collect = "%s%s" % (path_src, "_processed")
             if os.path.exists(path_collect):
                 shutil.rmtree(path_collect)
             os.mkdir(path_collect)
@@ -22,7 +29,7 @@ def process(path_src: str, path_collect: str, enable_replace: bool, process_meth
         # 原图完整地址
         file_src = path_src + os.sep + file
 
-        if file[0] == '.':
+        if file[0] == ".":
             os.remove(file_src)
             continue
 
@@ -35,16 +42,17 @@ def process(path_src: str, path_collect: str, enable_replace: bool, process_meth
                 new_image = process_method(src_img)
                 if new_image:
                     new_image.save(file_dst)
-                    print(src_img.size, ' -> ', new_image.size)
+                    count += 1
+                    print(count, " ", src_img.size, " -> ", new_image.size)
                     # print(file, ': ', src_img.size, ' -> ', new_image.size)
                 else:
-                    print(src_img.size, ' PASS')
+                    print(src_img.size, " PASS")
                     continue
             except IOError:
-                print('convert fail: ', file)
-            
+                print("convert fail: ", file)
+
         if os.path.isdir(file_src):
-            process(file_src, path_collect, enable_replace,  process_method)
+            process(file_src, path_collect, enable_replace, process_method)
 
 
 # 直接压缩到 1920*1080，可能会失去原图比例，但是保留所有原图图像，这个相当于windows壁纸的“拉伸”
@@ -71,11 +79,13 @@ def fit_to_fhd(src_img: Image) -> Image:
         # 注意，这里的4个值是构成的2个点的绝对坐标，分别是左上角的点和右下角的点。
         first_point_to_top = int((height_new - 1080) / 2)
         temp_image = temp_image.crop(
-            (0, first_point_to_top, 1920, height_new - first_point_to_top))
+            (0, first_point_to_top, 1920, height_new - first_point_to_top)
+        )
     elif height_new == 1080 and width_new > 1920:
         first_point_to_left = int((width_new - 1920) / 2)
         temp_image = temp_image.crop(
-            (first_point_to_left, 0, width_new - first_point_to_left, 1080))
+            (first_point_to_left, 0, width_new - first_point_to_left, 1080)
+        )
     # 这里是防止出现 1081 这种上面除以2的时候产生的异常值。
     return temp_image.resize((1920, 1080), Image.Resampling.LANCZOS)
 
@@ -98,17 +108,70 @@ def fit_to_fix_width(src_img: Image) -> Image:
     return src_img.resize((target_width, height_new), Image.Resampling.LANCZOS)
 
 
+# Clear transparency in PNG
+def remove_transparency(src_img: Image) -> Image:
+
+    # Check if the image has an alpha channel (transparency)
+    if src_img.mode in ("RGBA", "LA") or (
+        src_img.mode == "P" and "transparency" in src_img.info
+    ):
+        # Create a white background image
+        background = Image.new("RGB", src_img.size, (255, 255, 255))
+        # Paste the image on the background
+        background.paste(src_img, mask=src_img.split()[3])  # 3 is the alpha channel
+        src_img = background
+    elif src_img.mode != "RGB":
+        # Convert non-RGB modes (e.g., 'L', 'CMYK') to 'RGB'
+        src_img = src_img.convert("RGB")
+
+    # Return the converted image
+    return src_img
+
+
+def extend_image_to_size(
+    src_img: Image, new_size=(800, 800), background_color=(255, 255, 255)
+) -> Image:
+    """
+    Extends the image to a specified size with a white background.
+
+    :param src_img: The source image to extend.
+    :param new_size: A tuple (width, height) specifying the new size.
+    :param background_color: The color of the background (default is white).
+    :return: A new image extended to the specified size with a white background.
+    """
+    new_size = (max(new_size[0], src_img.size[0]), max(new_size[1], src_img.size[1]))
+
+    # Create a new image with the specified size and background color
+    new_img = Image.new("RGB", new_size, background_color)
+
+    # Calculate the position to paste the original image onto the new image
+    # so that it is centered
+    x1 = (new_size[0] - src_img.size[0]) // 2
+    y1 = (new_size[1] - src_img.size[1]) // 2
+
+    # Paste the original image onto the new image
+    new_img.paste(src_img, (x1, y1))
+
+    return new_img
+
+
 def is_picture(file_name: str) -> bool:
     file_type = os.path.splitext(file_name)[1]
-    if file_type.lower() in ('.jpg', '.png', '.jpeg'):
+    if file_type.lower() in (".jpg", ".png", ".jpeg", ".svg"):
         return True
     else:
         return False
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # resize_to_fhd
     # fit_to_fhd
     # fit_to_fix_width
     # process(r'F:\\2', "", True, fit_to_fix_width)
-    process(r'/1', "", True, fit_to_fix_width)
+    process(
+        r"1",
+        "",
+        True,
+        # remove_transparency,
+        extend_image_to_size,
+    )

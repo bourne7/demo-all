@@ -1,7 +1,7 @@
 plugins {
     // https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/htmlsingle/
     // https://plugins.gradle.org/plugin/org.springframework.boot
-    id "org.springframework.boot" version '3.1.5'
+    id "org.springframework.boot" version '3.2.4'
 }
 
 dependencies {

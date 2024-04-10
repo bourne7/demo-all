@@ -11,7 +11,7 @@ import time
 
 
 def add_before_name(pattern: str, path_src: str) -> None:
-    
+
     file_dict = {}
     for file in os.listdir(path_src):
         if file[0] == ".":
@@ -19,14 +19,19 @@ def add_before_name(pattern: str, path_src: str) -> None:
         file_dict[file] = file
 
     i = 1
-    for k in sorted(file_dict) : 
+    for k in sorted(file_dict):
         file_name_old = path_src + os.sep + file_dict[k]
-        file_name_new = path_src + os.sep + pattern + '{0:0>4d}_'.format(i) + file_dict[k].replace(' ', '_').lower()
+        file_name_new = (
+            path_src
+            + os.sep
+            + pattern
+            + "{0:0>4d}_".format(i)
+            + file_dict[k].replace(" ", "_").lower()
+        )
         file_name_new = path_src + os.sep + file_dict[k][5:]
         print(file_name_old + " -> " + file_name_new)
         os.rename(file_name_old, file_name_new)
-        i += 1 
-
+        i += 1
 
 
 # 格式化成为 字符+序号
@@ -35,7 +40,9 @@ def rename_index(pattern: str, path_src: str) -> None:
     for files in os.listdir(path_src):
         file_name_old = path_src + os.sep + files
         file_type = os.path.splitext(files)[1]
-        file_name_new = path_src + os.sep + pattern + '{0:0>4d}'.format(i) + file_type.lower()
+        file_name_new = (
+            path_src + os.sep + pattern + "{0:0>4d}".format(i) + file_type.lower()
+        )
         i += 1
         print(file_name_old + " -> " + file_name_new)
         os.rename(file_name_old, file_name_new)
@@ -44,21 +51,21 @@ def rename_index(pattern: str, path_src: str) -> None:
 # md5 命名所有文件
 def rename_md5(path_src: str) -> None:
     # 新建目录
-    path_src_md5 = path_src + '_md5'
+    path_src_md5 = path_src + "_md5"
     print(path_src_md5)
 
     # 如果有存在目录就删除
     if os.path.exists(path_src_md5):
         shutil.rmtree(path_src_md5)
 
-    time.sleep(.0000000000000001)
+    time.sleep(0.0000000000000001)
     os.mkdir(path_src_md5)
 
     i = 0
     for files in os.listdir(path_src):
         file_name_old = path_src + os.sep + files
 
-        with open(file_name_old, 'rb') as f:
+        with open(file_name_old, "rb") as f:
             md5 = hashlib.md5(f.read()).hexdigest()
 
             file_type = os.path.splitext(files)[1]
@@ -80,7 +87,26 @@ def rename_add_extension(path, ext):
             if os.path.splitext(pure_file_name)[1] != "." + ext:
                 old_file_name = os.path.join(dir_path, pure_file_name)
                 new_file_name = os.path.join(
-                    dir_path, os.path.splitext(pure_file_name)[0] + "." + ext)
+                    dir_path, os.path.splitext(pure_file_name)[0] + "." + ext
+                )
+                print(os.path.splitext(pure_file_name))
+                os.rename(old_file_name, new_file_name)
+
+
+# 替换后缀
+def rename_replace_extension(path, ext, ext_new):
+    for dir_path, dir_names, file_names in os.walk(path):
+        for dir_name in dir_names:
+            print(os.path.join(dir_path, dir_name))
+        for pure_file_name in file_names:
+            if pure_file_name[0] == ".":
+                continue
+            # if current file extension is not target ext, change it.
+            if os.path.splitext(pure_file_name)[1] == "." + ext:
+                old_file_name = os.path.join(dir_path, pure_file_name)
+                new_file_name = os.path.join(
+                    dir_path, os.path.splitext(pure_file_name)[0] + "." + ext_new
+                )
                 print(os.path.splitext(pure_file_name))
                 os.rename(old_file_name, new_file_name)
 
@@ -106,8 +132,7 @@ def rename_modify_time(path):
             str_time = time.strftime("%Y-%m-%d_%H-%M-%S", local_time)
             print(str_time)
 
-            new_file_name = os.path.join(
-                dir_path, str_time + "_" + pure_file_name)
+            new_file_name = os.path.join(dir_path, str_time + "_" + pure_file_name)
 
             os.rename(full_file_name, new_file_name)
             print(new_file_name)
@@ -133,8 +158,13 @@ def rename_modify_index(path):
             i += 1
             full_file_name = os.path.join(dir_path, pure_file_name)
             extension = os.path.splitext(pure_file_name)[1]
-            new_file_name = os.path.join(dir_path, os.path.basename(
-                dir_path) + ' - ' + '{0:0>4d}'.format(i) + extension.lower())
+            new_file_name = os.path.join(
+                dir_path,
+                os.path.basename(dir_path)
+                + " - "
+                + "{0:0>4d}".format(i)
+                + extension.lower(),
+            )
             os.rename(full_file_name, new_file_name)
 
 
@@ -172,6 +202,7 @@ def delete_files_include_str(path):
                 print(full_file_name)
                 os.remove(full_file_name)
 
+
 # get file size in MB
 
 
@@ -191,7 +222,8 @@ def change_file_time(path):
     minute = 0
     second = 0
     fix_date = datetime.datetime(
-        year=year, month=month, day=day, hour=hour, minute=minute, second=second)
+        year=year, month=month, day=day, hour=hour, minute=minute, second=second
+    )
 
     for dir_path, dir_names, file_names in os.walk(path):
         for dir_name in dir_names:
@@ -210,16 +242,17 @@ def change_file_time(path):
             os.utime(full_file_name, (now_time, now_time))
 
 
-if __name__ == '__main__':
-    print('start')
+if __name__ == "__main__":
+    print("start")
     # folder = r'/1'
-    folder = r'/Users/aac/Desktop/111'
+    folder = r"/Users/aac/Desktop/111"
     # add_before_name('',r'/Users/aac/Desktop/cache')
     # rename_index('', 'D:\1')
     # rename_md5(r'D:\1')
-    rename_add_extension(folder, 'mp4')
+    # rename_add_extension(folder, 'mp4')
+    rename_replace_extension(folder, "jpg", "png")
     # rename_modify_time(folder)
     # change_file_time(folder)
     # delete_small_files(folder)
-    delete_files_include_str(folder)
+    # delete_files_include_str(folder)
     # rename_modify_index(folder)
