@@ -34,7 +34,6 @@ spring:
 #      port: 6379
 
   datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
     # 使用druid数据源
     type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:mysql://127.0.0.1:3306/demo_spring?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
@@ -80,12 +79,13 @@ spring:
         login-password: admin
 
   jpa:
-    # 数据库类型
+    # 数据库类型 mysql
     database: mysql
     # 是否打印 sql ,不打印，log4jdbc打印sql
     show-sql: false
     # 是否自动创建 table
     generate-ddl: true
+    # org.hibernate.dialect.MySQLDialect
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       # create – Hibernate first drops existing tables, then creates new tables
@@ -93,7 +93,7 @@ spring:
       # create-drop – similar to create, with the addition that Hibernate will drop the database after all operations are completed. Typically used for unit testing
       # validate – Hibernate only validates whether the tables and columns exist, otherwise it throws an exception
       # none – this value effectively turns off the DDL generation
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
@@ -101,5 +101,3 @@ spring:
         # 命名策略，会将Java代码中的驼峰命名法映射到数据库中会变成下划线法
         # 注意，这里从 2021-07-16 开始换了一个策略类了，由 SpringPhysicalNamingStrategy 换到 CamelCaseToUnderscoresNamingStrategy
         physical_naming_strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
-
-

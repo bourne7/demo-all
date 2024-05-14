@@ -1,12 +1,13 @@
 plugins {
     // https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/htmlsingle/
     // https://plugins.gradle.org/plugin/org.springframework.boot
-    id "org.springframework.boot" version '3.2.4'
+    id "org.springframework.boot" version '3.2.5'
 }
 
 dependencies {
 
     testImplementation libs.spring.boot.starter.test
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     implementation libs.javax.annotation.api
 
@@ -56,6 +57,4 @@ dependencies {
 
     // 如果是本地包，可以用这个方法引入
     // implementation files('libs/ignore/JwtPermission-1.0.9.jar')
-
-    implementation libs.groovy
 }

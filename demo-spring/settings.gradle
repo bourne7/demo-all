@@ -36,14 +36,7 @@ dependencyResolutionManagement {
             library('springdoc-openapi-starter-webmvc-ui', 'org.springdoc:springdoc-openapi-starter-webmvc-ui:+')
             library('spring-boot-starter-validation', 'org.springframework.boot:spring-boot-starter-validation:+')
 
-            library('leveldb', 'org.iq80.leveldb:leveldb:+')
-            library('rocksdb', 'org.rocksdb:rocksdbjni:+')
-            library('disruptor', 'com.lmax:disruptor:3.+')
-
-            // https://mvnrepository.com/artifact/org.apache.groovy/groovy-all
-            library('groovy-all', 'org.apache.groovy:groovy-all:4.0.19')
-            library('groovy', 'org.apache.groovy:groovy:4.0.19')
-
+            library('hibernate-community-dialects', 'org.hibernate.orm:hibernate-community-dialects:+')
         }
     }
 }
