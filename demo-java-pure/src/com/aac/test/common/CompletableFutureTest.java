@@ -1,6 +1,6 @@
 package com.aac.test.common;
 
-import com.aac.test.utils.MyUtils;
+import com.aac.test.utils.CommonUtils;
 
 import java.io.IOException;
 import java.util.concurrent.*;
@@ -36,7 +36,7 @@ public class CompletableFutureTest {
         //2、CompletableFuture.completedFuture()直接创建一个已完成状态的CompletableFuture
         CompletableFuture<String> cf2 = CompletableFuture.completedFuture("result2");
 
-        MyUtils.sleep(1);
+        CommonUtils.sleep(1);
 
         System.out.println(1);
         //3、先初始化一个未完成的CompletableFuture，然后通过complete()、completeExceptionally()，完成该CompletableFuture
@@ -130,7 +130,7 @@ public class CompletableFutureTest {
                     /**
                      * 上面代码中用到了一个自定义的工具类 extractRealException ，用于CompletableFuture的异常提取，在使用CompletableFuture做异步编程时，可以直接使用该工具类处理异常。实现代码如下：
                      */
-                    MyUtils.print("WmOrderRemarkService.getCancelTypeAsync Exception orderId={}", orderId, MyUtils.extractRealException(err));
+                    CommonUtils.print("WmOrderRemarkService.getCancelTypeAsync Exception orderId={}", orderId, CommonUtils.extractRealException(err));
                     return "Error";
                 });
     }
@@ -170,20 +170,20 @@ public class CompletableFutureTest {
         CompletableFuture<String> completableFuture = new CompletableFuture<>();
 
         CompletableFuture<String> completableFuture2 = completableFuture.thenApplyAsync(v -> {
-            MyUtils.print("thenApply 1 " + v.toUpperCase());
+            CommonUtils.print("thenApply 1 " + v.toUpperCase());
 //            throw new RuntimeException("error 1");
             return v.toUpperCase();
         }).exceptionally(e -> {
-            MyUtils.print("exceptionally 1 " + e.getMessage());
+            CommonUtils.print("exceptionally 1 " + e.getMessage());
             return "exceptionally 1";
         });
 
         completableFuture2.thenApplyAsync(v -> {
-            MyUtils.print("thenApply 2 " + v.toUpperCase());
+            CommonUtils.print("thenApply 2 " + v.toUpperCase());
 //            throw new RuntimeException("error 1");
             return v.toUpperCase() + "[2]";
         }).exceptionally(e -> {
-            MyUtils.print("exceptionally 2 " + e.getMessage());
+            CommonUtils.print("exceptionally 2 " + e.getMessage());
             return "exceptionally 2";
         });
 
@@ -191,11 +191,11 @@ public class CompletableFutureTest {
 //        completableFuture2.complete("message 2");
 //        completableFuture2.complete("message 3");
 
-        MyUtils.print("completableFuture: " + completableFuture.get());
-        MyUtils.print("completableFuture: " + completableFuture.join());
+        CommonUtils.print("completableFuture: " + completableFuture.get());
+        CommonUtils.print("completableFuture: " + completableFuture.join());
 
-        MyUtils.print("completableFuture2: " + completableFuture2.get());
-        MyUtils.print("completableFuture2: " + completableFuture2.join());
+        CommonUtils.print("completableFuture2: " + completableFuture2.get());
+        CommonUtils.print("completableFuture2: " + completableFuture2.join());
     }
 
 
@@ -232,14 +232,14 @@ public class CompletableFutureTest {
         executorService = ForkJoinPool.commonPool();
 
         CompletionStage<Integer> stage = currentStage.thenComposeAsync(p -> {
-            MyUtils.print(p);
+            CommonUtils.print(p);
             return CompletableFuture.completedFuture(p + 1);
         }, executorService);
 
 
         CompletionStage<CompletableFuture<Integer>> stage2 = stage.thenApplyAsync(p -> {
 
-            MyUtils.print(p);
+            CommonUtils.print(p);
 
             try {
                 TimeUnit.SECONDS.sleep(1);
@@ -247,7 +247,7 @@ public class CompletableFutureTest {
                 throw new RuntimeException(e);
             }
 
-            MyUtils.print(p + " after sleep");
+            CommonUtils.print(p + " after sleep");
             return CompletableFuture.completedFuture(p + 1);
         }, executorService);
 

@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 /**
  * @author Lawrence Peng
  */
-public class MyUtils {
+public class CommonUtils {
 
     public static void sleep(int time) {
         try {
@@ -18,13 +18,16 @@ public class MyUtils {
         }
     }
 
-    public static void print(Object... obj) {
-        Stream.of(obj).forEach(v -> System.out.println(Thread.currentThread().getName() +
-                " | isDaemon: " +
-                Thread.currentThread().isDaemon() +
-                " | " +
-                v)
-        );
+    public static void print(Object... objects) {
+        String fullClassName = Thread.currentThread().getStackTrace()[2].getClassName();
+        String className = fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
+        String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
+        int lineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
+
+        String prefix = Thread.currentThread().getName() + " | "
+                + className + "." + methodName + "():" + lineNumber + "\t|";
+
+        Stream.of(objects).forEach(v -> System.out.println(prefix + v.toString()));
     }
 
     public static Throwable extractRealException(Throwable throwable) {

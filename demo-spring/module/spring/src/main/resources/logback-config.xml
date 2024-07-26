@@ -81,7 +81,37 @@
          Set to true and the appender will just drop the message and will not block your application. -->
         <neverBlock>false</neverBlock>
 
+        <appender-ref ref="SocketAppender"/>
         <appender-ref ref="LOG_FILE"/>
+    </appender>
+
+
+    <!-- https://logback.qos.ch/manual/appenders.html#SocketAppender -->
+    <appender name="SocketAppender" class="ch.qos.logback.classic.net.SocketAppender">
+
+        <IncludeCallerData>${LOG_INCLUDE_CALLER_DATA:-false}</IncludeCallerData>
+        <ReconnectionDelay>${LOG_RECONNECTION_DELAY:-30000}</ReconnectionDelay>
+        <acceptConnectionTimeout>${LOG_ACCEPT_CONNECTION_TIMEOUT:-5000}</acceptConnectionTimeout>
+
+        <queueSize>${LOG_queueSize:-128}</queueSize>
+
+        <eventDelayLimit>${LOG_EVENT_DELAY_LIMIT:-100 milliseconds}</eventDelayLimit>
+
+        <remoteHost>${LOG_REMOTE_HOST:-172.18.35.58}</remoteHost>
+        <port>${LOG_PORT:-4560}</port>
+
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator>
+                <matcher>
+                    <Name>myFilter</Name>
+                    <regex>${LOG_MY_FILTER_REG:-logServer}</regex>
+                </matcher>
+                <expression>myFilter.matches(formattedMessage)</expression>
+            </evaluator>
+            <OnMatch>ACCEPT</OnMatch>
+            <OnMismatch>DENY</OnMismatch>
+        </filter>
+
     </appender>
 
     <logger name="org.springframework" level="ERROR"/>

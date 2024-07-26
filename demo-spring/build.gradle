@@ -48,6 +48,10 @@ allprojects {
     compileJava.options.encoding = 'UTF-8'
     compileTestJava.options.encoding = 'UTF-8'
 
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = "utf-8"
+    }
+
     // 根目录任务
     tasks.register('helloWorldTaskFromRoot') {
         println "Hello World! From root project."
@@ -76,6 +80,7 @@ allprojects {
         implementation libs.commons.codec
         implementation libs.hutool.all
         implementation libs.caffeine
+        implementation libs.poi
     }
 
     //In some cases, Gradle will load JVM test framework dependencies from the Gradle distribution in order to execute tests. This existing behavior can lead to test framework dependency version conflicts on the test classpath. To avoid these conflicts, this behavior is deprecated and will be removed in Gradle 9.0. Tests using TestNG are unaffected.

@@ -22,6 +22,8 @@ dependencyResolutionManagement {
             library('commons-math3', 'org.apache.commons:commons-math3:+')
             library('commons-compress', 'org.apache.commons:commons-compress:+')
             library('commons-codec', 'commons-codec:commons-codec:+')
+            library('poi', 'org.apache.poi:poi-ooxml:+')
+
             // library('commons-lang3', 'org.apache.commons', 'commons-lang3').version {
             //     strictly '[3.8, 4.0['
             //     prefer '3.9'
@@ -37,6 +39,8 @@ dependencyResolutionManagement {
             library('spring-boot-starter-validation', 'org.springframework.boot:spring-boot-starter-validation:+')
 
             library('hibernate-community-dialects', 'org.hibernate.orm:hibernate-community-dialects:+')
+
+            library('janino', 'org.codehaus.janino:janino:+')
         }
     }
 }

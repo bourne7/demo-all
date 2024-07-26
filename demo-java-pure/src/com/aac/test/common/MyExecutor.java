@@ -1,6 +1,6 @@
 package com.aac.test.common;
 
-import com.aac.test.utils.MyUtils;
+import com.aac.test.utils.CommonUtils;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -12,20 +12,20 @@ public class MyExecutor {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         executorService.submit(() -> {
-            MyUtils.sleep(1);
-            MyUtils.print("Hello World");
+            CommonUtils.sleep(1);
+            CommonUtils.print("Hello World");
         });
 
         try {
             boolean b = executorService.awaitTermination(2, TimeUnit.SECONDS);
             executorService.shutdown();
             // MyUtils.sleep(1);
-            MyUtils.print(executorService.isTerminated());  // 马上执行这句，会是false，除非sleep 一下，或者先执行 isShutdown()
-            MyUtils.print(executorService.isShutdown());
+            CommonUtils.print(executorService.isTerminated());  // 马上执行这句，会是false，除非sleep 一下，或者先执行 isShutdown()
+            CommonUtils.print(executorService.isShutdown());
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-        MyUtils.print("============");
+        CommonUtils.print("============");
     }
 }

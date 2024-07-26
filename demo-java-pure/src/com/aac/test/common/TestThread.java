@@ -1,13 +1,13 @@
 package com.aac.test.common;
 
-import com.aac.test.utils.MyUtils;
+import com.aac.test.utils.CommonUtils;
 
 public class TestThread {
 
     static class MyRunnable implements Runnable {
         @Override
         public void run() {
-            MyUtils.sleep(1);
+            CommonUtils.sleep(1);
             System.out.println("Thread is running");
         }
     }
