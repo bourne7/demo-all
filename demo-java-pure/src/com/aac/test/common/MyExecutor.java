@@ -12,7 +12,7 @@ public class MyExecutor {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         executorService.submit(() -> {
-            CommonUtils.sleep(1);
+            CommonUtils.sleepMs(1);
             CommonUtils.print("Hello World");
         });
 

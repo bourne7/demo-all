@@ -9,7 +9,7 @@
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}",
-            "vmArgs": "-Xms128m -Xmx128m -Xlog:gc*=info:file=logs/gc.log"
+            "vmArgs": "-Xmx128m -Xlog:gc*=info:file=logs/gc.log"
         }
     ]
 }

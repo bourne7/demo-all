@@ -7,7 +7,7 @@ public class TestThread {
     static class MyRunnable implements Runnable {
         @Override
         public void run() {
-            CommonUtils.sleep(1);
+            CommonUtils.sleepMs(1);
             System.out.println("Thread is running");
         }
     }

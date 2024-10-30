@@ -1,18 +1,21 @@
 package com.aac.test.utils;
 
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
+
+import java.util.Date;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 
 /**
  * @author Lawrence Peng
  */
 public class CommonUtils {
 
-    public static void sleep(int time) {
+    public static void sleepMs(int time) {
         try {
-            TimeUnit.SECONDS.sleep(time);
+            TimeUnit.MILLISECONDS.sleep(time);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -24,10 +27,17 @@ public class CommonUtils {
         String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
         int lineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
 
-        String prefix = Thread.currentThread().getName() + " | "
+        String prefix = DateUtil.format(new Date(), DatePattern.NORM_DATETIME_MS_FORMATTER) + " | "
+                + Thread.currentThread().getName() + " | "
                 + className + "." + methodName + "():" + lineNumber + "\t|";
 
-        Stream.of(objects).forEach(v -> System.out.println(prefix + v.toString()));
+        if (objects != null && objects.length == 1) {
+            System.out.println(prefix + objects[0]);
+        } else if (objects != null && objects.length > 1) {
+            System.out.println(prefix + objects[0] + " | " + objects.length);
+        } else {
+            System.out.println(prefix + " | null");
+        }
     }
 
     public static Throwable extractRealException(Throwable throwable) {

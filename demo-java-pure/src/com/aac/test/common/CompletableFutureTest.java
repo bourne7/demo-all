@@ -36,7 +36,7 @@ public class CompletableFutureTest {
         //2、CompletableFuture.completedFuture()直接创建一个已完成状态的CompletableFuture
         CompletableFuture<String> cf2 = CompletableFuture.completedFuture("result2");
 
-        CommonUtils.sleep(1);
+        CommonUtils.sleepMs(1);
 
         System.out.println(1);
         //3、先初始化一个未完成的CompletableFuture，然后通过complete()、completeExceptionally()，完成该CompletableFuture
