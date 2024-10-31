@@ -18,17 +18,20 @@ def add_before_name(pattern: str, path_src: str) -> None:
             continue
         file_dict[file] = file
 
-    i = 1
+    i = 109
     for k in sorted(file_dict):
         file_name_old = path_src + os.sep + file_dict[k]
         file_name_new = (
             path_src
             + os.sep
             + pattern
-            + "{0:0>4d}_".format(i)
-            + file_dict[k].replace(" ", "_").lower()
+            + "{0:0>3d}".format(i)
+            # + file_dict[k].replace(" ", "_").lower()
+            + file_dict[k]
         )
-        file_name_new = path_src + os.sep + file_dict[k][5:]
+        # file_name_new = file_name_new + '.mp4'
+        file_name_new = path_src + os.sep + file_dict[k][:-26]+".mp4"
+        # file_name_new = file_name_new[:-26]
         print(file_name_old + " -> " + file_name_new)
         os.rename(file_name_old, file_name_new)
         i += 1
@@ -246,11 +249,11 @@ if __name__ == "__main__":
     print("start")
     # folder = r'/1'
     folder = r"/Users/aac/Desktop/111"
-    # add_before_name('',r'/Users/aac/Desktop/cache')
+    add_before_name("", folder)
     # rename_index('', 'D:\1')
     # rename_md5(r'D:\1')
     # rename_add_extension(folder, 'mp4')
-    rename_replace_extension(folder, "jpg", "png")
+    # rename_replace_extension(folder, "jpg", "png")
     # rename_modify_time(folder)
     # change_file_time(folder)
     # delete_small_files(folder)
