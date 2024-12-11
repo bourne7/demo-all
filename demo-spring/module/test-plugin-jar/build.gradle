@@ -1,0 +1,32 @@
+dependencies {
+
+    implementation project(":module:test-code")
+
+    implementation group: 'org.pf4j', name: 'pf4j', version: '+'
+
+    annotationProcessor group: 'org.pf4j', name: 'pf4j', version: '+'
+
+}
+
+def pluginProps = new Properties()
+
+tasks.register('loadProps') {
+    doLast {
+        file('src/main/resources/plugin.properties').withInputStream { stream ->
+            pluginProps.load(stream)
+        }
+    }
+}
+
+jar {
+    enabled = true
+    dependsOn loadProps
+    doFirst {
+        pluginProps.forEach { k, v -> println "$k = $v"}
+        archiveFileName = "${pluginProps['plugin.id']}-${pluginProps['plugin.version']}.jar"
+    }
+}
+
+compileJava {
+    options.annotationProcessorPath = configurations.annotationProcessor
+}

@@ -1,5 +1,6 @@
 include 'module:test-code'
 include 'module:spring'
+include 'module:test-plugin-jar'
 
 dependencyResolutionManagement {
     versionCatalogs {
@@ -44,3 +45,6 @@ dependencyResolutionManagement {
         }
     }
 }
+include 'module:test-plugin-jar'
+findProject(':module:test-plugin-jar')?.name = 'test-plugin-jar'
+
