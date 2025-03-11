@@ -1,9 +1,10 @@
 package com.aac.test.common;
 
-import java.time.Clock;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  * @author Lawrence Peng
@@ -11,56 +12,33 @@ import java.time.ZonedDateTime;
 public class DateTest {
 
     public static void main(String[] args) {
-        System.out.println(System.lineSeparator() + "====================================" + System.lineSeparator());
-        System.out.println("System.currentTimeMillis(): " + System.currentTimeMillis());
-        System.out.println(System.lineSeparator() + "====================================" + System.lineSeparator());
+
+        // 打印当前时间
+        long now = System.currentTimeMillis();
+        System.out.printf("%-30s : %d\n", "now", now);
+        System.out.printf("%-30s : %s\n", "new Date()", new Date(now));
+
+        // 多线程安全，可以共享这个
+        DateTimeFormatter FORMAT_PATTERN =
+                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+
+        // 将时间戳转换为字符串
+        Instant instant = Instant.ofEpochMilli(now);
+        OffsetDateTime offsetDateTime = instant.atOffset(ZoneOffset.UTC);
+        final String nowStr = FORMAT_PATTERN.format(offsetDateTime);
+        // 由于使用了 UTC 时间戳，可以看出距离本地真实时间有 8小时 时差
+        System.out.printf("%-30s : %s\n", "OffsetDateTime.format", nowStr);
+
+        // 将字符串转换成为时间戳
+        now = OffsetDateTime.parse(nowStr, FORMAT_PATTERN).toInstant().toEpochMilli();
+        System.out.printf("%-30s : %s\n", "now from nowStr", now);
 
         /**
-         * 如何产生一个 UTC 时间
+         * now                            : 1741078989795
+         * new Date()                     : Tue Mar 04 17:03:09 CST 2025
+         * OffsetDateTime.format          : 2025-03-04T09:03:09.795Z
+         * now from nowStr                : 1741078989795
          */
-        LocalDateTime localDateTime;
-        // 这里选择方法1
-        localDateTime = LocalDateTime.now();
-        localDateTime = method1();
-//        localDateTime = method2();
-
-        // 先产生一个 LocalDateTime，然后再转换成 UTC 时间。
-        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.of("Asia/Shanghai"));
-        long epochMilli_SHANGHAI = zonedDateTime.toInstant().toEpochMilli();
-        System.out.println("zonedDateTime: " + zonedDateTime + " epochMilli_SHANGHAI: " + epochMilli_SHANGHAI);
-
-        zonedDateTime = localDateTime.atZone(ZoneId.of("UTC"));
-        long epochMilli_UTC = zonedDateTime.toInstant().toEpochMilli();
-        System.out.println("zonedDateTime: " + zonedDateTime + " epochMilli_UTC: " + epochMilli_UTC);
-
-        System.out.println("字面时间一样，时区不一样的时候，epochMilli_SHANGHAI - epochMilli_UTC = " + (epochMilli_SHANGHAI - epochMilli_UTC));
-
-        System.out.println(System.lineSeparator() + "====================================" + System.lineSeparator());
-    }
-
-    /**
-     * 方法1： Define a date and time without a time zone
-     */
-    private static LocalDateTime method1() {
-        LocalDateTime localDateTime = LocalDateTime.of(2018, 6, 26, 0, 0, 0);
-        System.out.println("method1: LocalDateTime.of...: " + localDateTime);
-        return localDateTime;
-    }
-
-    /**
-     * 方法2： 用这个方法可以返回一个 UTC 的钟，用于产生 LocalDateTime
-     */
-    private static LocalDateTime method2() {
-
-        Clock clock = Clock.systemUTC();
-        System.out.println("Clock.systemUTC().millis(): " + clock.millis());
-
-        clock = Clock.systemDefaultZone();
-        System.out.println("Clock.systemDefaultZone().millis(): " + clock.millis());
-
-        LocalDateTime localDateTime = LocalDateTime.now(clock);
-        System.out.println("method2: LocalDateTime.of(Clock): " + localDateTime);
-        return localDateTime;
     }
 
 }
