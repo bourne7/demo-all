@@ -1,0 +1,23 @@
+server:
+  tomcat:
+    uri-encoding: UTF-8
+  port: ${SPRING_MAIN_PORT:80}
+  maxHttpRequestHeaderSize: 102400
+
+logging:
+  config: src/main/resources/logback-config.xml
+
+
+spring:
+  jackson:
+    date-format: 'yyyy-MM-dd HH:mm:ss'
+    time-zone: 'Asia/Shanghai'
+
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+  application:
+    # 从配置中心加载这个值的时候，并不会被自动注入到spring上下文里面去。所以在 swagger 里面是手动引入这个配置的。
+    name: demo-spring
