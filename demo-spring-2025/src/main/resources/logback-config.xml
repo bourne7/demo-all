@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <property name="LOG_PATH" value="logs"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%cyan(%d{HH:mm:ss.SSS}) [%boldYellow(%thread)] %highlight(%-5level)
+                %boldBlue(%logger{5}#%method)[%line] - %msg%n
+            </pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+
+    </appender>
+
+    <appender name="LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 注意这里要用 SizeAndTimeBasedRollingPolicy 这个策略，可以兼容日期和大小 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- daily rollover 保存历史记录到这个文件夹一日起为后缀 -->
+            <fileNamePattern>${LOG_PATH}/log-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- 每个log的最大值 -->
+            <maxFileSize>100MB</maxFileSize>
+            <!-- 保存多少天的日志 -->
+            <maxHistory>1</maxHistory>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{5}#%method[%line] - %msg %n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+
+    <!-- By default, event queue is configured with a maximum capacity of 256 events. If the queue is filled up,
+    then application threads are blocked from logging new events until the worker thread has had a chance to dispatch
+    one or more events. When the queue is no longer at its maximum capacity, application threads are able to start
+    logging events once again. Asynchronous logging therefore becomes pseudo-synchronous when the appender is operating
+     at or near the capacity of its event buffer. This is not necessarily a bad thing. The appender is designed to
+     allow the application to keep on running, albeit taking slightly more time to log events until the pressure on
+     the appenders buffer eases. -->
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+
+        <!-- The maximum capacity of the blocking queue. By default, queueSize is set to 256. -->
+        <queueSize>512</queueSize>
+
+        <!-- 	By default, when the blocking queue has 20% capacity remaining, it will drop events of level TRACE,
+        DEBUG and INFO, keeping only events of level WARN and ERROR. To keep all events, set discardingThreshold to 0. -->
+        <discardingThreshold>0</discardingThreshold>
+
+        <!-- Extracting caller data can be rather expensive. To improve performance, by default, caller data associated
+         with an event is not extracted when the event added to the event queue. By default, only "cheap" data like the
+          thread name and the MDC are copied. You can direct this appender to include caller data by setting the
+          includeCallerData property to true. -->
+        <includeCallerData>false</includeCallerData>
+
+
+        <!-- Depending on the queue depth and latency to the referenced appender, the AsyncAppender may take an
+        unacceptable amount of time to fully flush the queue. When the LoggerContext is stopped, the AsyncAppender
+        stop method waits up to this timeout for the worker thread to complete. Use maxFlushTime to specify a maximum
+        queue flush timeout in milliseconds. Events that cannot be processed within this window are discarded.
+        Semantics of this value are identical to that of Thread.join(long).
+
+        Upon application shutdown or redeploy, AsyncAppender must be stopped in order to stop and reclaim the worker
+        thread and to flush the logging events from the queue. This can be achieved by stopping the LoggerContext which
+         will close all appenders, including any AsyncAppender instances. AsyncAppender will wait for the worker thread
+          to flush up to the timeout specified in maxFlushTime. If you find that queued events are being discarded
+          during close of the LoggerContext, you may need to increase the time out. Specifying a value of 0 for
+          maxFlushTime will force the AsyncAppender to wait for all queued events to be flushed before returning from
+          the stop method.
+
+        default time is 1000
+        -->
+        <maxFlushTime>0</maxFlushTime>
+
+        <!-- If false (the default) the appender will block on appending to a full queue rather than losing the message.
+         Set to true and the appender will just drop the message and will not block your application. -->
+        <neverBlock>false</neverBlock>
+
+        <appender-ref ref="LOG_FILE"/>
+    </appender>
+
+    <logger name="org.springframework" level="ERROR"/>
+
+    <!--下面是3个不同的log配置-->
+    <springProfile name="dev">
+        <root level="info">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="ASYNC"/>
+        </root>
+    </springProfile>
+
+</configuration>
